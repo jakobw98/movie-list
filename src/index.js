@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-function App() {
+const App = () => {
   // State for keeping track of movie data
   const [movies, setMovies] = useState([]);
 
   // State for input form values
   const [title, setTitle] = useState('');
   const [rating, setRating] = useState('');
+
+  // State for sorting
+  const [sortBy, setSortBy] = useState('title'); // 'title' or 'rating'
+  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
 
   // Function to handle form submission
   const handleSubmit = (event) => {
@@ -29,23 +33,40 @@ function App() {
     // Add new movie to array of movies
     setMovies([...movies, newMovie]);
 
-    // Reset form values
+    // Reset input form values
     setTitle('');
     setRating('');
   };
 
-  // Function to handle movie deletion
-  const handleDelete = (index) => {
-    // Create new array without deleted movie
-    const newMovies = movies.filter((movie, i) => i !== index);
+  // Function to render movie list
+  const renderMovieList = () => {
+    const sortedMovies = [...movies].sort((a, b) => {
+      const keyA = sortBy === 'title' ? a.title : a.rating;
+      const keyB = sortBy === 'title' ? b.title : b.rating;
+      if (sortOrder === 'asc') {
+        return keyA.localeCompare(keyB);
+      } else {
+        return keyB.localeCompare(keyA);
+      }
+    });
 
-    // Update state with new array of movies
-    setMovies(newMovies);
+    return (
+      <ul>
+        {sortedMovies.map((movie, index) => (
+          <li key={index}>
+            {movie.title}{' '}
+            {Array(parseInt(movie.rating)).fill().map((_, i) => (
+              <span key={i}>&#9733;</span>
+            ))}
+          </li>
+        ))}
+      </ul>
+    );
   };
 
   return (
-    <div>
-      <h1>My Movie List</h1>
+    <div className="App">
+      <h1>Movie Ratings</h1>
       <form onSubmit={handleSubmit}>
         <label>
           Title:
@@ -53,21 +74,28 @@ function App() {
         </label>
         <label>
           Rating:
-          <input type="number" min="1" max="5" value={rating} onChange={(event) => setRating(event.target.value)} />
+          <select value={rating} onChange={(event) => setRating(event.target.value)}>
+            <option value="">--</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
         </label>
         <button type="submit">Add Movie</button>
       </form>
-      <ul>
-        {movies.map((movie, index) => (
-          <li key={index}>
-            {movie.title} {Array(movie.rating).fill().map((_, i) => <span key={i}>&#9733;</span>)}
-            <button onClick={() => handleDelete(index)}>X</button>
-          </li>
-        ))}
-      </ul>
+      <div>
+        <button onClick={() => setSortBy('title')}>Sort by Title</button>
+        <button onClick={() => setSortBy('rating')}>Sort by Rating</button>
+        <button onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}>
+          {sortOrder === 'asc' ? 'Sort Descending' : 'Sort Ascending'}
+        </button>
+      </div>
+      {movies.length > 0 ? renderMovieList() : <p>No movies yet!</p>}
     </div>
   );
-}
+};
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
