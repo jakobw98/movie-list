@@ -38,6 +38,15 @@ const App = () => {
     setRating('');
   };
 
+  // Function to handle movie deletion
+  const handleDelete = (index) => {
+    // Create new array without deleted movie
+    const newMovies = movies.filter((movie, i) => i !== index);
+  
+    // Update state with new array of movies
+    setMovies(newMovies);
+    };
+
   // Function to render movie list
   const renderMovieList = () => {
     const sortedMovies = [...movies].sort((a, b) => {
@@ -58,6 +67,7 @@ const App = () => {
             {Array(parseInt(movie.rating)).fill().map((_, i) => (
               <span key={i}>&#9733;</span>
             ))}
+            <button class="delete"onClick={() => handleDelete(index)}>X</button>
           </li>
         ))}
       </ul>
