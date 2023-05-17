@@ -60,12 +60,12 @@ const App = () => {
     });
 
     return (
-      <ul>
+      <ul className="movielist">
         {sortedMovies.map((movie, index) => (
           <li key={index}>
-            {movie.title}{' '}
+            <span className="movie-title">{movie.title}</span>
             {Array(parseInt(movie.rating)).fill().map((_, i) => (
-              <span key={i}>&#9733;</span>
+              <span class="star-rating" key={i}>&#9733;</span>
             ))}
             <button class="delete"onClick={() => handleDelete(index)}>X</button>
           </li>
@@ -77,7 +77,7 @@ const App = () => {
   return (
     <div className="App">
       <h1>Movie Ratings</h1>
-      <form onSubmit={handleSubmit}>
+      <form class="movieform" onSubmit={handleSubmit}>
         <label>
           Title:
           <input type="text" value={title} onChange={(event) => setTitle(event.target.value)} />
@@ -93,12 +93,12 @@ const App = () => {
             <option value="5">5</option>
           </select>
         </label>
-        <button type="submit">Add Movie</button>
+        <button class="button" type="submit">Add Movie</button>
       </form>
       <div>
-        <button onClick={() => setSortBy('title')}>Sort by Title</button>
-        <button onClick={() => setSortBy('rating')}>Sort by Rating</button>
-        <button onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}>
+        <button class="button" onClick={() => setSortBy('title')}>Sort by Title</button>
+        <button class="button" onClick={() => setSortBy('rating')}>Sort by Rating</button>
+        <button class="button" onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}>
           {sortOrder === 'asc' ? 'Sort Descending' : 'Sort Ascending'}
         </button>
       </div>
